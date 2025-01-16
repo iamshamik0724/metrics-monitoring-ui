@@ -2,7 +2,7 @@ import React from 'react';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css'; 
 
-import Last10MinutesGraph from './Last10MinutesGraph';
+import Last10MinutesGraph from './Last10MinutesGraph.jsx';
 
 const MetricsDashboard = () => {
   return (
