@@ -4,7 +4,7 @@ This React application provides a real-time metrics dashboard to visualize API p
 
 1. **Last 10 Minutes Graph**: Displays API response times for the last 10 minutes, loaded from a REST API.
 
-2. **Real-Time Graph**: Updates in real-time using data received over a WebSocket connection. (Work In Progress)
+2. **Real-Time Graph**: Updates in real-time using data received over a WebSocket connection.
 
 [Watch the Complete Metric Monitoring UI Demo Video](public/metrics-monitoring-ui-demo.mp4)
 
@@ -30,7 +30,8 @@ https://github.com/user-attachments/assets/27194fb6-7416-49c6-8d07-8ac130b60933
 
   - The app uses React Context to manage metrics data globally.
 
-- **WebSocket Integration (Work In Progress)** :
+- **WebSocket Integration** :
+
   - Live updates from the server ensure that data stays current while monitoring real-time performance.
 
 ---
@@ -80,6 +81,10 @@ https://github.com/user-attachments/assets/27194fb6-7416-49c6-8d07-8ac130b60933
 - Real-time updates are received from the WebSocket endpoint at `ws://localhost:8085/ws`.
 - Make sure the WebSocket server is running and reachable.
 
+### Ensure Metrics Persistance Server is up and running
+- Refer to bring up metrics-persistance-server
+- Validate if the URLs in config.js int this repo are pointing to correct port number over which the metric-persistance-server is running
+
 ---
 
 ## How It Works
@@ -113,12 +118,5 @@ https://github.com/user-attachments/assets/27194fb6-7416-49c6-8d07-8ac130b60933
     "status": 200
   }
   ```
-
-### Graphs
-
-1. **Last 10 Minutes Graph**
-   - Displays historical data fetched from the REST API.
-2. **Real-Time Graph (Work In Progress)**
-   - Dynamically updates based on WebSocket messages.
 
 ---
