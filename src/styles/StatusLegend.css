@@ -1,0 +1,52 @@
+/* StatusLegend.css */
+
+/* Define CSS variables for the colors */
+:root {
+    --status-ok: #4CAF50;
+    --status-unauthorized: #FF9800;
+    --status-server-error: #F44336;
+    --status-other: #9E9E9E;
+  }
+  
+  .status-legend-container {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    margin-bottom: 10px;
+  }
+  
+  .status-legend-title {
+    display: flex;
+    align-items: center;
+    margin: 5px 5px;
+  }
+  
+  .status-item {
+    display: flex;
+    align-items: center;
+    margin: 5px 5px;
+  }
+  
+  .status-color-box {
+    width: 15px;
+    height: 15px;
+    display: inline-block;
+    margin-right: 5px;
+  }
+  
+  .status-ok {
+    background-color: var(--status-ok);
+  }
+  
+  .status-unauthorized {
+    background-color: var(--status-unauthorized);
+  }
+  
+  .status-server-error {
+    background-color: var(--status-server-error);
+  }
+  
+  .status-other {
+    background-color: var(--status-other);
+  }
+  

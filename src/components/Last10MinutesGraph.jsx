@@ -3,7 +3,7 @@ import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, LogarithmicScale } from 'chart.js';
 import { MetricsContext } from '../context/MetricsContext';
 import ChartjsPluginCrosshair from 'chartjs-plugin-crosshair';
-import { statusColors, getColorByStatus, StatusLegend } from './StatusColors';
+import { statusColors, getColorByStatus, StatusLegend } from './StatusLegend';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, ChartjsPluginCrosshair, LogarithmicScale);
 
