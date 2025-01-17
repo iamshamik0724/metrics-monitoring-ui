@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import CONFIG from "../config/config";
 
 export const MetricsContext = React.createContext();
 
@@ -7,10 +8,9 @@ export const MetricsContextProvider = ({ children }) => {
 
   const fetchMetricsData = async () => {
     try {
-      const response = await fetch('http://localhost:8085/metrics');
+      const response = await fetch(CONFIG.METRICS_HTTP_URL);
       if (!response.ok) throw new Error("Failed to fetch metrics");
       const data = await response.json();
-      console.log(data)
       setMetricsData(data);
     } catch (err) {
       console.log(err);

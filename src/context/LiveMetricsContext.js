@@ -1,13 +1,12 @@
 import React, { useEffect, useContext } from 'react';
-import { MetricsContext } from './MetricsContext'; // Import your existing MetricsContext
-
-const WEBSOCKET_URL = 'ws://localhost:8085/ws'; // WebSocket URL
+import { MetricsContext } from './MetricsContext';
+import CONFIG from '../config/config';
 
 const LiveMetricsContextProvider = ({ children }) => {
   const { metricsData, setMetricsData } = useContext(MetricsContext);
 
   useEffect(() => {
-    const socket = new WebSocket(WEBSOCKET_URL);
+    const socket = new WebSocket(CONFIG.WEBSOCKET_URL);
   
     socket.onopen = () => {
       console.log('WebSocket connection established');
@@ -51,7 +50,7 @@ const LiveMetricsContextProvider = ({ children }) => {
     return () => {
       socket.close();
     };
-  }, [setMetricsData]); // Only include setMetricsData as a dependency
+  }, [setMetricsData]);
   
 
   return <>{children}</>;
