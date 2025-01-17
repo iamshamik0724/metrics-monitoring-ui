@@ -4,19 +4,21 @@ This React application provides a real-time metrics dashboard to visualize API p
 
 1. **Last 10 Minutes Graph**: Displays API response times for the last 10 minutes, loaded from a REST API.
    ![Last 10 Minutes Metrics](public/Last10Minutesmetrics.png)
-  
-3. **Real-Time Graph**: Updates in real-time using data received over a WebSocket connection. (Work In Progress)
+
+2. **Real-Time Graph**: Updates in real-time using data received over a WebSocket connection. (Work In Progress)
 
 ---
 
 ## Features
 
 - **Dynamic Visualizations**:
+
   - Graphs for each route.
   - Logarithmic y-axis to visualize response times in milliseconds.
   - Color-coded statuses for quick status identification.
 
 - **Context-Based State Management**:
+
   - The app uses React Context to manage metrics data globally.
 
 - **WebSocket Integration (Work In Progress)** :
@@ -27,11 +29,14 @@ This React application provides a real-time metrics dashboard to visualize API p
 ## Getting Started
 
 ### Prerequisites
+
 - Node.js (>= 16.x)
 - npm
 
 ### Installation
+
 1. Clone the repository:
+
    ```bash
    git clone <repository-url>
    cd <repository-folder>
@@ -43,23 +48,26 @@ This React application provides a real-time metrics dashboard to visualize API p
    ```
 
 ### Running the App
+
 1. Start the development server:
+
    ```bash
    npm run start
    ```
 
 2. Open your browser and navigate to `http://localhost:3000`.
 
-
 ---
 
 ## Configuration
 
 ### REST API
+
 - The app fetches the last 10 minutes of metrics from `http://localhost:8085/metrics`.
 - Ensure that your backend is running and accessible at the specified endpoint.
 
 ### WebSocket
+
 - Real-time updates are received from the WebSocket endpoint at `ws://localhost:8085/ws`.
 - Make sure the WebSocket server is running and reachable.
 
@@ -68,6 +76,7 @@ This React application provides a real-time metrics dashboard to visualize API p
 ## How It Works
 
 ### Metrics Context (`MetricsContext`)
+
 - Loads the last 10 minutes of data when the app starts.
 - Stores metrics in the following format:
   ```json
@@ -84,6 +93,7 @@ This React application provides a real-time metrics dashboard to visualize API p
   ```
 
 ### Live Metrics Context (`LiveMetricsContextProvider`)
+
 - Establishes a WebSocket connection when loaded.
 - Appends live data to the `MetricsContext`. The live data format is:
   ```json
@@ -96,11 +106,10 @@ This React application provides a real-time metrics dashboard to visualize API p
   ```
 
 ### Graphs
+
 1. **Last 10 Minutes Graph**
    - Displays historical data fetched from the REST API.
 2. **Real-Time Graph (Work In Progress)**
    - Dynamically updates based on WebSocket messages.
 
 ---
-
-

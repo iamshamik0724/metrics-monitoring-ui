@@ -2,19 +2,19 @@ import React from "react";
 import "../styles/StatusLegend.css";
 
 export const statusColors = {
-  200: '#4CAF50',
-  400: '#FF9800',
-  401: '#FF9800',
-  500: '#F44336',
-  default: '#9E9E9E',
+  200: "#4CAF50",
+  400: "#FF9800",
+  401: "#FF9800",
+  500: "#F44336",
+  default: "#9E9E9E",
 };
 
-export const getColorByStatus = (status) => statusColors[status] || statusColors.default;
-
+export const getColorByStatus = (status) =>
+  statusColors[status] || statusColors.default;
 
 export const StatusLegend = () => (
   <div className="status-legend-container">
-    <div className="status-legend-title"> Status Legends </div>  
+    <div className="status-legend-title"> Status Legends </div>
     <div className="status-item">
       <span className="status-color-box status-ok"></span>
       <span> 200 - OK</span>

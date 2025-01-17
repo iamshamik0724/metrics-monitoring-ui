@@ -19,7 +19,7 @@ export const MetricsContextProvider = ({ children }) => {
 
   useEffect(() => {
     fetchMetricsData();
-  }, []); 
+  }, []);
 
   return (
     <MetricsContext.Provider value={{ metricsData, setMetricsData }}>

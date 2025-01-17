@@ -1,11 +1,31 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { Line } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, LogarithmicScale } from 'chart.js';
-import { MetricsContext } from '../context/MetricsContext';
-import ChartjsPluginCrosshair from 'chartjs-plugin-crosshair';
-import { statusColors, getColorByStatus, StatusLegend } from './StatusLegend';
+import React, { useState, useEffect, useContext } from "react";
+import { Line } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  LogarithmicScale,
+} from "chart.js";
+import { MetricsContext } from "../context/MetricsContext";
+import ChartjsPluginCrosshair from "chartjs-plugin-crosshair";
+import { statusColors, getColorByStatus, StatusLegend } from "./StatusLegend";
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, ChartjsPluginCrosshair, LogarithmicScale);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  ChartjsPluginCrosshair,
+  LogarithmicScale,
+);
 
 const RealTimeMetricsGraph = () => {
   const { metricsData } = useContext(MetricsContext);
@@ -13,23 +33,36 @@ const RealTimeMetricsGraph = () => {
 
   // Set default label on the first render only
   useEffect(() => {
-    if (metricsData && metricsData.metrics && metricsData.metrics.length > 0 && selectedLabel === null) {
+    if (
+      metricsData &&
+      metricsData.metrics &&
+      metricsData.metrics.length > 0 &&
+      selectedLabel === null
+    ) {
       const defaultLabel = `${metricsData.metrics[0].route}`;
       setSelectedLabel(defaultLabel); // Set the first route as the default label
     }
   }, [metricsData, selectedLabel]);
 
-  if (!metricsData || !metricsData.metrics || metricsData.metrics.length === 0) {
+  if (
+    !metricsData ||
+    !metricsData.metrics ||
+    metricsData.metrics.length === 0
+  ) {
     return <div>Loading...</div>;
   }
 
   const datasets = metricsData.metrics.map((metric, index) => {
-    const filteredResponseTime = metric.responseTime.map((value) => (value === -1 ? null : value));
+    const filteredResponseTime = metric.responseTime.map((value) =>
+      value === -1 ? null : value,
+    );
     const pointColors = metric.responseStatus.map((status, idx) =>
-      filteredResponseTime[idx] === null ? 'transparent' : getColorByStatus(status)
+      filteredResponseTime[idx] === null
+        ? "transparent"
+        : getColorByStatus(status),
     );
 
-    const label = `${metric.route || 'Unknown Route'}`;
+    const label = `${metric.route || "Unknown Route"}`;
 
     return {
       label,
@@ -54,11 +87,12 @@ const RealTimeMetricsGraph = () => {
         display: true,
         labels: {
           generateLabels: (chart) => {
-            const originalLabels = ChartJS.defaults.plugins.legend.labels.generateLabels(chart);
+            const originalLabels =
+              ChartJS.defaults.plugins.legend.labels.generateLabels(chart);
             return originalLabels.map((label) => ({
               ...label,
-              fontStyle: label.text === selectedLabel ? 'bold' : 'normal',
-              fontColor: label.text === selectedLabel ? '#000' : 'gray',
+              fontStyle: label.text === selectedLabel ? "bold" : "normal",
+              fontColor: label.text === selectedLabel ? "#000" : "gray",
             }));
           },
         },
@@ -67,7 +101,7 @@ const RealTimeMetricsGraph = () => {
         },
       },
       tooltip: {
-        mode: 'index',
+        mode: "index",
         intersect: false,
         callbacks: {
           title: (tooltipItems) => {
@@ -78,7 +112,7 @@ const RealTimeMetricsGraph = () => {
       },
       crosshair: {
         line: {
-          color: 'black',
+          color: "black",
           width: 1,
           dashPattern: [5, 5],
         },
@@ -96,8 +130,8 @@ const RealTimeMetricsGraph = () => {
         ticks: {
           callback: (value, index) => {
             const fullTimestamp = metricsData.timestamps[index];
-            const [date, time] = fullTimestamp.split('T');
-            const formattedTime = time.split('+')[0];
+            const [date, time] = fullTimestamp.split("T");
+            const formattedTime = time.split("+")[0];
             return `${date}\n${formattedTime}`;
           },
           maxTicksLimit: 5,
@@ -107,13 +141,13 @@ const RealTimeMetricsGraph = () => {
         },
       },
       y: {
-        type: 'logarithmic',
+        type: "logarithmic",
         ticks: {
           callback: (value) => {
             if ((value < 50 && value >= 1) || value % 100 === 0) {
               return value;
             }
-            return '';
+            return "";
           },
         },
         grid: {
@@ -121,23 +155,23 @@ const RealTimeMetricsGraph = () => {
         },
         title: {
           display: true,
-          text: 'Response Time (ms)',
+          text: "Response Time (ms)",
           font: {
             size: 18,
-            weight: 'bold',
+            weight: "bold",
           },
         },
       },
     },
     interaction: {
-      mode: 'nearest',
-      axis: 'x',
+      mode: "nearest",
+      axis: "x",
       intersect: false,
     },
   };
 
   return (
-    <div style={{ width: '100%', height: '700px' }}>
+    <div style={{ width: "100%", height: "700px" }}>
       <StatusLegend />
       <Line data={chartData} options={options} />
     </div>

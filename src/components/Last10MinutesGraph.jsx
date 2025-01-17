@@ -1,11 +1,31 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { Line } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, LogarithmicScale } from 'chart.js';
-import { MetricsContext } from '../context/MetricsContext';
-import ChartjsPluginCrosshair from 'chartjs-plugin-crosshair';
-import { statusColors, getColorByStatus, StatusLegend } from './StatusLegend';
+import React, { useState, useEffect, useContext } from "react";
+import { Line } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  LogarithmicScale,
+} from "chart.js";
+import { MetricsContext } from "../context/MetricsContext";
+import ChartjsPluginCrosshair from "chartjs-plugin-crosshair";
+import { statusColors, getColorByStatus, StatusLegend } from "./StatusLegend";
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, ChartjsPluginCrosshair, LogarithmicScale);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  ChartjsPluginCrosshair,
+  LogarithmicScale,
+);
 
 const Last10MinutesGraph = () => {
   const { metricsData } = useContext(MetricsContext);
@@ -14,31 +34,41 @@ const Last10MinutesGraph = () => {
   // Generate a single color for each route key
   const generateColorPalette = (index) => {
     const colors = [
-      '#4CAF50', // Green
-      '#2196F3', // Blue
-      '#FFC107', // Amber
-      '#FF5722', // Deep Orange
-      '#9C27B0', // Purple
+      "#4CAF50", // Green
+      "#2196F3", // Blue
+      "#FFC107", // Amber
+      "#FF5722", // Deep Orange
+      "#9C27B0", // Purple
     ];
     return colors[1];
   };
 
   useEffect(() => {
     if (metricsData && metricsData.metrics && metricsData.metrics.length > 0) {
-      const randomIndex = Math.floor(Math.random() * metricsData.metrics.length);
+      const randomIndex = Math.floor(
+        Math.random() * metricsData.metrics.length,
+      );
       const defaultLabel = `${metricsData.metrics[randomIndex].route}`;
       setSelectedLabel(defaultLabel);
     }
   }, [metricsData]);
 
-  if (!metricsData || !metricsData.metrics || metricsData.metrics.length === 0) {
+  if (
+    !metricsData ||
+    !metricsData.metrics ||
+    metricsData.metrics.length === 0
+  ) {
     return <div>Loading...</div>;
   }
 
   const datasets = metricsData.metrics.map((metric, index) => {
-    const filteredResponseTime = metric.responseTime.map((value) => (value === -1 ? null : value));
+    const filteredResponseTime = metric.responseTime.map((value) =>
+      value === -1 ? null : value,
+    );
     const pointColors = metric.responseStatus.map((status, idx) =>
-      filteredResponseTime[idx] === null ? "transparent" : getColorByStatus(status)
+      filteredResponseTime[idx] === null
+        ? "transparent"
+        : getColorByStatus(status),
     );
 
     const label = `${metric.route || "Unknown Route"}`;
@@ -66,14 +96,15 @@ const Last10MinutesGraph = () => {
         display: true,
         labels: {
           generateLabels: (chart) => {
-            const originalLabels = ChartJS.defaults.plugins.legend.labels.generateLabels(chart);
+            const originalLabels =
+              ChartJS.defaults.plugins.legend.labels.generateLabels(chart);
             return originalLabels.map((label) => {
               if (label.text === selectedLabel) {
-                label.fontStyle = 'bold';
-                label.fontColor = '#000'; // Black for selected label
+                label.fontStyle = "bold";
+                label.fontColor = "#000"; // Black for selected label
               } else {
-                label.fontStyle = 'normal';
-                label.fontColor = 'gray'; // Gray for unselected labels
+                label.fontStyle = "normal";
+                label.fontColor = "gray"; // Gray for unselected labels
               }
               return label;
             });
@@ -84,7 +115,7 @@ const Last10MinutesGraph = () => {
         },
       },
       tooltip: {
-        mode: 'index',
+        mode: "index",
         intersect: false,
         callbacks: {
           title: (tooltipItems) => {
@@ -95,7 +126,7 @@ const Last10MinutesGraph = () => {
       },
       crosshair: {
         line: {
-          color: 'black',
+          color: "black",
           width: 1,
           dashPattern: [5, 5],
         },
@@ -109,54 +140,54 @@ const Last10MinutesGraph = () => {
       },
     },
     scales: {
-        x: {
-          ticks: {
-            callback: (value, index) => {
-              const fullTimestamp = metricsData.timestamps[index];
-              const [date, time] = fullTimestamp.split('T');
-              const formattedTime = time.split('+')[0];
-              return `${date}\n${formattedTime}`;
-            },
-            maxTicksLimit: 5,
+      x: {
+        ticks: {
+          callback: (value, index) => {
+            const fullTimestamp = metricsData.timestamps[index];
+            const [date, time] = fullTimestamp.split("T");
+            const formattedTime = time.split("+")[0];
+            return `${date}\n${formattedTime}`;
           },
-          grid: {
-            drawTicks: false,
+          maxTicksLimit: 5,
+        },
+        grid: {
+          drawTicks: false,
+        },
+      },
+      y: {
+        type: "logarithmic", // Set the y-axis to logarithmic scale
+        ticks: {
+          callback: (value) => {
+            // Customize tick labels for better readability
+            if ((value < 50 && value >= 1) || value % 100 === 0) {
+              return value; // Show key values
+            }
+            return ""; // Hide other values
           },
         },
-        y: {
-          type: 'logarithmic', // Set the y-axis to logarithmic scale
-          ticks: {
-            callback: (value) => {
-              // Customize tick labels for better readability
-              if ((value < 50 && value >=1) || ((value%100) === 0)) {
-                return value; // Show key values
-              }
-              return ''; // Hide other values
-            },
-          },
-          grid: {
-            drawTicks: true,
-          },
-          title: {
-            display: true,
-            text: 'Response Time (ms)', // Y-axis title indicating milliseconds
-            font: {
-                size: 18, // Increase font size for the title
-                weight: 'bold', // Optional: make it bold
-            },
+        grid: {
+          drawTicks: true,
+        },
+        title: {
+          display: true,
+          text: "Response Time (ms)", // Y-axis title indicating milliseconds
+          font: {
+            size: 18, // Increase font size for the title
+            weight: "bold", // Optional: make it bold
           },
         },
       },
-      
+    },
+
     interaction: {
-      mode: 'nearest',
-      axis: 'x',
+      mode: "nearest",
+      axis: "x",
       intersect: false,
     },
   };
 
   return (
-    <div style={{ width: '100%', height: '700px' }}>
+    <div style={{ width: "100%", height: "700px" }}>
       {/* Static Legend */}
       <StatusLegend />
 

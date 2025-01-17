@@ -1,10 +1,10 @@
-import React from 'react';
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import 'react-tabs/style/react-tabs.css'; 
+import React from "react";
+import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
+import "react-tabs/style/react-tabs.css";
 
-import Last10MinutesGraph from './Last10MinutesGraph.jsx';
-import RealTimeMetricsGraph from './RealTimeMetricsGraph.jsx';
-import LiveMetricsContextProvider from '../context/LiveMetricsContext.js';
+import Last10MinutesGraph from "./Last10MinutesGraph.jsx";
+import RealTimeMetricsGraph from "./RealTimeMetricsGraph.jsx";
+import LiveMetricsContextProvider from "../context/LiveMetricsContext.js";
 
 const MetricsDashboard = () => {
   return (
