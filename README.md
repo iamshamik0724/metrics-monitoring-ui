@@ -6,10 +6,8 @@ This React application provides a real-time metrics dashboard to visualize API p
 
 2. **Real-Time Graph**: Updates in real-time using data received over a WebSocket connection. (Work In Progress)
 
-<video width="640" height="360" controls>
-  <source src="public/metrics-monitoring-ui-demo.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+[Watch the Metric Monitoring UI Demo Video](public/metrics-monitoring-ui-demo.mp4)
+
 
 ---
 
