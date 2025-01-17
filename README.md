@@ -1,70 +1,105 @@
-# Getting Started with Create React App
+# Metrics Monitoring Dashboard
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This React application provides a real-time metrics dashboard to visualize API performance. It includes two key features:
 
-## Available Scripts
+1. **Last 10 Minutes Graph**: Displays API response times for the last 10 minutes, loaded from a REST API.
+  
+3. **Real-Time Graph**: Updates in real-time using data received over a WebSocket connection. (Work In Progress)
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **Dynamic Visualizations**:
+  - Graphs for each route.
+  - Logarithmic y-axis to visualize response times in milliseconds.
+  - Color-coded statuses for quick status identification.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- **Context-Based State Management**:
+  - The app uses React Context to manage metrics data globally.
 
-### `npm test`
+- **WebSocket Integration (Work In Progress)** :
+  - Live updates from the server ensure that data stays current while monitoring real-time performance.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+---
 
-### `npm run build`
+## Getting Started
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Prerequisites
+- Node.js (>= 16.x)
+- npm
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Installation
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+   cd <repository-folder>
+   ```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-### `npm run eject`
+### Running the App
+1. Start the development server:
+   ```bash
+   npm run start
+   ```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+2. Open your browser and navigate to `http://localhost:3000`.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+---
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Configuration
 
-## Learn More
+### REST API
+- The app fetches the last 10 minutes of metrics from `http://localhost:8085/metrics`.
+- Ensure that your backend is running and accessible at the specified endpoint.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### WebSocket
+- Real-time updates are received from the WebSocket endpoint at `ws://localhost:8085/ws`.
+- Make sure the WebSocket server is running and reachable.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+---
 
-### Code Splitting
+## How It Works
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### Metrics Context (`MetricsContext`)
+- Loads the last 10 minutes of data when the app starts.
+- Stores metrics in the following format:
+  ```json
+  {
+    "timestamps": ["2025-01-15T12:00:00Z", "2025-01-15T12:01:00Z"],
+    "metrics": [
+      {
+        "route": "GET - /health",
+        "responseTime": [150.2, 120.5],
+        "responseStatus": [200, 400]
+      }
+    ]
+  }
+  ```
 
-### Analyzing the Bundle Size
+### Live Metrics Context (`LiveMetricsContextProvider`)
+- Establishes a WebSocket connection when loaded.
+- Appends live data to the `MetricsContext`. The live data format is:
+  ```json
+  {
+    "route": "POST - /api/products",
+    "timestamp": "2025-01-15T17:32:56+05:30",
+    "time": 48.888,
+    "status": 200
+  }
+  ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### Graphs
+1. **Last 10 Minutes Graph**
+   - Displays historical data fetched from the REST API.
+2. **Real-Time Graph (Work In Progress)**
+   - Dynamically updates based on WebSocket messages.
 
-### Making a Progressive Web App
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
 
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
