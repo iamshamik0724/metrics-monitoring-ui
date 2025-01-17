@@ -22,7 +22,7 @@ export const MetricsContextProvider = ({ children }) => {
   }, []); 
 
   return (
-    <MetricsContext.Provider value={{ metricsData }}>
+    <MetricsContext.Provider value={{ metricsData, setMetricsData }}>
       {children}
     </MetricsContext.Provider>
   );

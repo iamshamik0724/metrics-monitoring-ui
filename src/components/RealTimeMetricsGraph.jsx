@@ -8,28 +8,16 @@ import { statusColors, getColorByStatus, StatusLegend } from './StatusColors';
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, ChartjsPluginCrosshair, LogarithmicScale);
 
 const RealTimeMetricsGraph = () => {
-  const { metricsData, setMetricsData } = useContext(MetricsContext);
+  const { metricsData } = useContext(MetricsContext);
   const [selectedLabel, setSelectedLabel] = useState(null);
 
-  // Generate a single color for each route key
-  const generateColorPalette = (index) => {
-    const colors = [
-      '#4CAF50', // Green
-      '#2196F3', // Blue
-      '#FFC107', // Amber
-      '#FF5722', // Deep Orange
-      '#9C27B0', // Purple
-    ];
-    return colors[1];
-  };
-
+  // Set default label on the first render only
   useEffect(() => {
-    if (metricsData && metricsData.metrics && metricsData.metrics.length > 0) {
-      const randomIndex = Math.floor(Math.random() * metricsData.metrics.length);
-      const defaultLabel = `${metricsData.metrics[randomIndex].route}`;
-      setSelectedLabel(defaultLabel);
+    if (metricsData && metricsData.metrics && metricsData.metrics.length > 0 && selectedLabel === null) {
+      const defaultLabel = `${metricsData.metrics[0].route}`;
+      setSelectedLabel(defaultLabel); // Set the first route as the default label
     }
-  }, [metricsData]);
+  }, [metricsData, selectedLabel]);
 
   if (!metricsData || !metricsData.metrics || metricsData.metrics.length === 0) {
     return <div>Loading...</div>;
@@ -38,24 +26,24 @@ const RealTimeMetricsGraph = () => {
   const datasets = metricsData.metrics.map((metric, index) => {
     const filteredResponseTime = metric.responseTime.map((value) => (value === -1 ? null : value));
     const pointColors = metric.responseStatus.map((status, idx) =>
-      filteredResponseTime[idx] === null ? "transparent" : getColorByStatus(status)
+      filteredResponseTime[idx] === null ? 'transparent' : getColorByStatus(status)
     );
 
-    const label = `${metric.route || "Unknown Route"}`;
+    const label = `${metric.route || 'Unknown Route'}`;
 
     return {
-      label: label, // Preserve route labels for graph
-      data: filteredResponseTime, // Filtered Y-axis data
+      label,
+      data: filteredResponseTime,
       fill: false,
-      borderColor: generateColorPalette(index), // Unique color for each route
-      tension: 0.5, // Smooth curve
+      borderColor: statusColors[index % statusColors.length], // Unique color per route
+      tension: 0.5,
       pointBackgroundColor: pointColors,
       hidden: label !== selectedLabel, // Show only the selected dataset
     };
   });
 
   const chartData = {
-    labels: metricsData.timestamps, // All timestamps
+    labels: metricsData.timestamps,
     datasets,
   };
 
@@ -67,16 +55,11 @@ const RealTimeMetricsGraph = () => {
         labels: {
           generateLabels: (chart) => {
             const originalLabels = ChartJS.defaults.plugins.legend.labels.generateLabels(chart);
-            return originalLabels.map((label) => {
-              if (label.text === selectedLabel) {
-                label.fontStyle = 'bold';
-                label.fontColor = '#000'; // Black for selected label
-              } else {
-                label.fontStyle = 'normal';
-                label.fontColor = 'gray'; // Gray for unselected labels
-              }
-              return label;
-            });
+            return originalLabels.map((label) => ({
+              ...label,
+              fontStyle: label.text === selectedLabel ? 'bold' : 'normal',
+              fontColor: label.text === selectedLabel ? '#000' : 'gray',
+            }));
           },
         },
         onClick: (e, legendItem) => {
@@ -89,7 +72,7 @@ const RealTimeMetricsGraph = () => {
         callbacks: {
           title: (tooltipItems) => {
             const index = tooltipItems[0].dataIndex;
-            return metricsData.timestamps[index]; // Show full timestamp in tooltip
+            return metricsData.timestamps[index];
           },
         },
       },
@@ -109,45 +92,43 @@ const RealTimeMetricsGraph = () => {
       },
     },
     scales: {
-        x: {
-          ticks: {
-            callback: (value, index) => {
-              const fullTimestamp = metricsData.timestamps[index];
-              const [date, time] = fullTimestamp.split('T');
-              const formattedTime = time.split('+')[0];
-              return `${date}\n${formattedTime}`;
-            },
-            maxTicksLimit: 5,
+      x: {
+        ticks: {
+          callback: (value, index) => {
+            const fullTimestamp = metricsData.timestamps[index];
+            const [date, time] = fullTimestamp.split('T');
+            const formattedTime = time.split('+')[0];
+            return `${date}\n${formattedTime}`;
           },
-          grid: {
-            drawTicks: false,
+          maxTicksLimit: 5,
+        },
+        grid: {
+          drawTicks: false,
+        },
+      },
+      y: {
+        type: 'logarithmic',
+        ticks: {
+          callback: (value) => {
+            if ((value < 50 && value >= 1) || value % 100 === 0) {
+              return value;
+            }
+            return '';
           },
         },
-        y: {
-          type: 'logarithmic', // Set the y-axis to logarithmic scale
-          ticks: {
-            callback: (value) => {
-              // Customize tick labels for better readability
-              if ((value < 50 && value >=1) || ((value%100) === 0)) {
-                return value; // Show key values
-              }
-              return ''; // Hide other values
-            },
-          },
-          grid: {
-            drawTicks: true,
-          },
-          title: {
-            display: true,
-            text: 'Response Time (ms)', // Y-axis title indicating milliseconds
-            font: {
-                size: 18, // Increase font size for the title
-                weight: 'bold', // Optional: make it bold
-            },
+        grid: {
+          drawTicks: true,
+        },
+        title: {
+          display: true,
+          text: 'Response Time (ms)',
+          font: {
+            size: 18,
+            weight: 'bold',
           },
         },
       },
-      
+    },
     interaction: {
       mode: 'nearest',
       axis: 'x',
@@ -157,14 +138,10 @@ const RealTimeMetricsGraph = () => {
 
   return (
     <div style={{ width: '100%', height: '700px' }}>
-      {/* Static Legend */}
       <StatusLegend />
-
-      {/* Line Graph */}
       <Line data={chartData} options={options} />
     </div>
   );
+};
 
-}
-
-export default RealTimeMetricsGraph
+export default RealTimeMetricsGraph;
