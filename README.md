@@ -3,6 +3,7 @@
 This React application provides a real-time metrics dashboard to visualize API performance. It includes two key features:
 
 1. **Last 10 Minutes Graph**: Displays API response times for the last 10 minutes, loaded from a REST API.
+   ![Last 10 Minutes Metrics](public/Last10Minutesmetrics.png)
   
 3. **Real-Time Graph**: Updates in real-time using data received over a WebSocket connection. (Work In Progress)
 
