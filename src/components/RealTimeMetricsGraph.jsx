@@ -31,7 +31,6 @@ const RealTimeMetricsGraph = () => {
   const { metricsData } = useContext(MetricsContext);
   const [selectedLabel, setSelectedLabel] = useState(null);
 
-  // Set default label on the first render only
   useEffect(() => {
     if (
       metricsData &&
@@ -40,7 +39,7 @@ const RealTimeMetricsGraph = () => {
       selectedLabel === null
     ) {
       const defaultLabel = `${metricsData.metrics[0].route}`;
-      setSelectedLabel(defaultLabel); // Set the first route as the default label
+      setSelectedLabel(defaultLabel);
     }
   }, [metricsData, selectedLabel]);
 
@@ -68,10 +67,10 @@ const RealTimeMetricsGraph = () => {
       label,
       data: filteredResponseTime,
       fill: false,
-      borderColor: statusColors[index % statusColors.length], // Unique color per route
+      borderColor: "#2196F3",
       tension: 0.5,
       pointBackgroundColor: pointColors,
-      hidden: label !== selectedLabel, // Show only the selected dataset
+      hidden: label !== selectedLabel,
     };
   });
 
@@ -97,7 +96,7 @@ const RealTimeMetricsGraph = () => {
           },
         },
         onClick: (e, legendItem) => {
-          setSelectedLabel(legendItem.text); // Update selected route on legend click
+          setSelectedLabel(legendItem.text);
         },
       },
       tooltip: {

@@ -31,18 +31,6 @@ const Last10MinutesGraph = () => {
   const { metricsData } = useContext(MetricsContext);
   const [selectedLabel, setSelectedLabel] = useState(null);
 
-  // Generate a single color for each route key
-  const generateColorPalette = (index) => {
-    const colors = [
-      "#4CAF50", // Green
-      "#2196F3", // Blue
-      "#FFC107", // Amber
-      "#FF5722", // Deep Orange
-      "#9C27B0", // Purple
-    ];
-    return colors[1];
-  };
-
   useEffect(() => {
     if (metricsData && metricsData.metrics && metricsData.metrics.length > 0) {
       const randomIndex = Math.floor(
@@ -74,18 +62,18 @@ const Last10MinutesGraph = () => {
     const label = `${metric.route || "Unknown Route"}`;
 
     return {
-      label: label, // Preserve route labels for graph
-      data: filteredResponseTime, // Filtered Y-axis data
+      label: label,
+      data: filteredResponseTime,
       fill: false,
-      borderColor: generateColorPalette(index), // Unique color for each route
-      tension: 0.5, // Smooth curve
+      borderColor: "#2196F3",
+      tension: 0.5,
       pointBackgroundColor: pointColors,
-      hidden: label !== selectedLabel, // Show only the selected dataset
+      hidden: label !== selectedLabel,
     };
   });
 
   const chartData = {
-    labels: metricsData.timestamps, // All timestamps
+    labels: metricsData.timestamps,
     datasets,
   };
 
@@ -101,17 +89,17 @@ const Last10MinutesGraph = () => {
             return originalLabels.map((label) => {
               if (label.text === selectedLabel) {
                 label.fontStyle = "bold";
-                label.fontColor = "#000"; // Black for selected label
+                label.fontColor = "#000";
               } else {
                 label.fontStyle = "normal";
-                label.fontColor = "gray"; // Gray for unselected labels
+                label.fontColor = "gray";
               }
               return label;
             });
           },
         },
         onClick: (e, legendItem) => {
-          setSelectedLabel(legendItem.text); // Update selected route on legend click
+          setSelectedLabel(legendItem.text);
         },
       },
       tooltip: {
@@ -120,7 +108,7 @@ const Last10MinutesGraph = () => {
         callbacks: {
           title: (tooltipItems) => {
             const index = tooltipItems[0].dataIndex;
-            return metricsData.timestamps[index]; // Show full timestamp in tooltip
+            return metricsData.timestamps[index];
           },
         },
       },
@@ -155,14 +143,13 @@ const Last10MinutesGraph = () => {
         },
       },
       y: {
-        type: "logarithmic", // Set the y-axis to logarithmic scale
+        type: "logarithmic",
         ticks: {
           callback: (value) => {
-            // Customize tick labels for better readability
             if ((value < 50 && value >= 1) || value % 100 === 0) {
-              return value; // Show key values
+              return value;
             }
-            return ""; // Hide other values
+            return "";
           },
         },
         grid: {
@@ -170,10 +157,10 @@ const Last10MinutesGraph = () => {
         },
         title: {
           display: true,
-          text: "Response Time (ms)", // Y-axis title indicating milliseconds
+          text: "Response Time (ms)",
           font: {
-            size: 18, // Increase font size for the title
-            weight: "bold", // Optional: make it bold
+            size: 18,
+            weight: "bold",
           },
         },
       },
@@ -188,10 +175,7 @@ const Last10MinutesGraph = () => {
 
   return (
     <div style={{ width: "100%", height: "700px" }}>
-      {/* Static Legend */}
       <StatusLegend />
-
-      {/* Line Graph */}
       <Line data={chartData} options={options} />
     </div>
   );
